@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bollywood Classics Catalog</title>
+    <meta
+      name="description"
+      content="A catalog of Bollywood movies I grew up watching"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="main-header">
+      <h1 class="title">Bollywood Classics</h1>
+      <p class="tagline">Films I grew up watching</p>
+    </header>
+
+    <div class="page-body">
+      <aside class="sidebar">
+        <h2>Filter</h2>
+        <p class="sidebar-note">Browse by genre</p>
+        <div class="filter-buttons">
+          <button type="button" class="filter-btn">All Films</button>
+          <button type="button" class="filter-btn">Romance</button>
+          <button type="button" class="filter-btn">Comedy</button>
+          <button type="button" class="filter-btn">Drama</button>
+          <button type="button" class="filter-btn">Action</button>
+        </div>
+      </aside>
+      <main class="content-area">
+        <p id="results-count" class="results-info"></p>
+        <div id="card-container" class="movie-grid"></div>
+      </main>
+    </div>
+
+    <div class="footer">
+      <p class="footer-text">Snap Academies project — data from memory + IMDb</p>
+    </div>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>
