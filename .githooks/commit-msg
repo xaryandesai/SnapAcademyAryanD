@@ -1,0 +1,6 @@
+#!/bin/sh
+# Strips attribution trailer lines so they never land on GitHub.
+msgfile="$1"
+tmp="${msgfile}.strip.$$"
+grep -v '^Made-with:' "$msgfile" > "$tmp" && mv "$tmp" "$msgfile"
+exit 0

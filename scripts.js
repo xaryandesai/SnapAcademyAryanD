@@ -6,8 +6,7 @@
 // --- MOVIE DATA ---
 // Each movie has the same fields so the rest of the code can
 // rely on them always being there. Cast is an array of strings;
-// poster is a Wikipedia image URL with a placehold.co fallback
-// wired up in buildMovieCard via onerror.
+// poster: local files in assets/posters/; placehold.co fallback in buildMovieCard via onerror.
 const movies = [
   {
     title: "Dilwale Dulhania Le Jayenge",
@@ -18,7 +17,7 @@ const movies = [
     language: "Hindi",
     description: "A young man falls in love on a Europe trip and follows his love to win her family's approval before she gets married off.",
     cast: ["Shah Rukh Khan", "Kajol", "Amrish Puri", "Farida Jalal"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a1/DDLJ_poster.jpg/220px-DDLJ_poster.jpg"
+    poster: "assets/posters/dilwale-dulhania-le-jayenge.png"
   },
   {
     title: "3 Idiots",
@@ -29,7 +28,7 @@ const movies = [
     language: "Hindi",
     description: "Two friends search for their lost college buddy while recalling the crazy and inspiring adventures they had together.",
     cast: ["Aamir Khan", "R. Madhavan", "Sharman Joshi", "Kareena Kapoor"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/d/df/3_idiots_poster.jpg/220px-3_idiots_poster.jpg"
+    poster: "assets/posters/3-idiots.png"
   },
   {
     title: "Lagaan",
@@ -40,7 +39,7 @@ const movies = [
     language: "Hindi",
     description: "Villagers in colonial India challenge British officers to a cricket match to avoid paying an oppressive land tax.",
     cast: ["Aamir Khan", "Gracy Singh", "Rachel Shelley", "Paul Blackthorne"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4d/Lagaan_poster.jpg/220px-Lagaan_poster.jpg"
+    poster: "assets/posters/lagaan.png"
   },
   {
     title: "Sholay",
@@ -51,7 +50,7 @@ const movies = [
     language: "Hindi",
     description: "Two criminals are hired by a retired police officer to capture the ruthless bandit Gabbar Singh terrorizing a village.",
     cast: ["Dharmendra", "Amitabh Bachchan", "Hema Malini", "Amjad Khan", "Jaya Badhuri"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/Sholay_poster.jpg/220px-Sholay_poster.jpg"
+    poster: "assets/posters/sholay.png"
   },
   {
     title: "Kabhi Khushi Kabhie Gham",
@@ -62,7 +61,7 @@ const movies = [
     language: "Hindi",
     description: "A wealthy patriarch's younger son sets out to London to bring his estranged adopted elder brother back home.",
     cast: ["Amitabh Bachchan", "Jaya Bachchan", "Shah Rukh Khan", "Kajol", "Hrithik Roshan", "Kareena Kapoor"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8e/Kabhi_Khushi_Kabhie_Gham_film_poster.jpg/220px-Kabhi_Khushi_Kabhie_Gham_film_poster.jpg"
+    poster: "assets/posters/kabhi-khushi-kabhie-gham.png"
   },
   {
     title: "Dil Chahta Hai",
@@ -73,7 +72,7 @@ const movies = [
     language: "Hindi",
     description: "Three inseparable best friends go their separate ways after college, each finding love and figuring out what matters most.",
     cast: ["Aamir Khan", "Saif Ali Khan", "Akshaye Khanna", "Preity Zinta", "Dimple Kapadia"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/0/08/Dil_Chahta_Hai_film_poster.jpg/220px-Dil_Chahta_Hai_film_poster.jpg"
+    poster: "assets/posters/dil-chahta-hai.png"
   },
   {
     title: "Devdas",
@@ -84,7 +83,7 @@ const movies = [
     language: "Hindi",
     description: "A heartbroken man turns to alcohol after being separated from his childhood love, spiraling into tragic self-destruction.",
     cast: ["Shah Rukh Khan", "Aishwarya Rai", "Madhuri Dixit", "Jackie Shroff"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7c/Devdas_2002_film_poster.jpg/220px-Devdas_2002_film_poster.jpg"
+    poster: "assets/posters/devdas.png"
   },
   {
     title: "Kuch Kuch Hota Hai",
@@ -95,7 +94,7 @@ const movies = [
     language: "Hindi",
     description: "A widowed father reads letters left by his late wife urging him to reconnect with his college best friend — who loved him.",
     cast: ["Shah Rukh Khan", "Kajol", "Rani Mukerji", "Salman Khan"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/0/02/Kuch_Kuch_Hota_Hai_poster.jpg/220px-Kuch_Kuch_Hota_Hai_poster.jpg"
+    poster: "assets/posters/kuch-kuch-hota-hai.png"
   },
   {
     title: "Gangs of Wasseypur",
@@ -106,7 +105,7 @@ const movies = [
     language: "Hindi",
     description: "A decades-long coal mafia feud erupts through multiple generations in a gritty, violent small-town saga.",
     cast: ["Manoj Bajpayee", "Nawazuddin Siddiqui", "Richa Chadda", "Tigmanshu Dhulia"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Gangs_of_Wasseypur_poster.jpg/220px-Gangs_of_Wasseypur_poster.jpg"
+    poster: "assets/posters/gangs-of-wasseypur.png"
   },
   {
     title: "Andaz Apna Apna",
@@ -117,7 +116,7 @@ const movies = [
     language: "Hindi",
     description: "Two lazy rivals both try to woo a rich heiress, leading to a hilarious series of misadventures and mistaken identities.",
     cast: ["Aamir Khan", "Salman Khan", "Raveena Tandon", "Karisma Kapoor", "Paresh Rawal"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8d/Andaz_Apna_Apna_poster.jpg/220px-Andaz_Apna_Apna_poster.jpg"
+    poster: "assets/posters/andaz-apna-apna.png"
   },
   {
     title: "Mughal-E-Azam",
@@ -128,7 +127,7 @@ const movies = [
     language: "Hindi/Urdu",
     description: "The Mughal prince Salim falls in love with court dancer Anarkali, defying his emperor father Akbar in a legendary epic.",
     cast: ["Prithviraj Kapoor", "Dilip Kumar", "Madhubala", "Durga Khote"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d4/Mughal-e-azam-1960.jpg/220px-Mughal-e-azam-1960.jpg"
+    poster: "assets/posters/mughal-e-azam.png"
   },
   {
     title: "Zindagi Na Milegi Dobara",
@@ -139,7 +138,7 @@ const movies = [
     language: "Hindi",
     description: "Three childhood friends take a road trip through Spain, confronting their fears and rediscovering what makes life worth living.",
     cast: ["Hrithik Roshan", "Farhan Akhtar", "Abhay Deol", "Katrina Kaif", "Kalki Koechlin"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/a/ab/Zindagi_Na_Milegi_Dobara_poster.jpg/220px-Zindagi_Na_Milegi_Dobara_poster.jpg"
+    poster: "assets/posters/zindagi-na-milegi-dobara.png"
   },
   {
     title: "Bajrangi Bhaijaan",
@@ -150,7 +149,7 @@ const movies = [
     language: "Hindi",
     description: "A devoted man goes on a journey across the India-Pakistan border to return a lost mute girl to her family.",
     cast: ["Salman Khan", "Harshaali Malhotra", "Kareena Kapoor", "Nawazuddin Siddiqui"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e5/Bajrangi_Bhaijaan_poster.jpg/220px-Bajrangi_Bhaijaan_poster.jpg"
+    poster: "assets/posters/bajrangi-bhaijaan.png"
   },
   {
     title: "Hum Dil De Chuke Sanam",
@@ -161,7 +160,7 @@ const movies = [
     language: "Hindi",
     description: "A newly married woman is still in love with someone else, and her husband makes the heart-wrenching decision to reunite them.",
     cast: ["Salman Khan", "Aishwarya Rai", "Ajay Devgn"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5b/Hum_Dil_De_Chuke_Sanam_film_poster.jpg/220px-Hum_Dil_De_Chuke_Sanam_film_poster.jpg"
+    poster: "assets/posters/hum-dil-de-chuke-sanam.png"
   },
   {
     title: "PK",
@@ -172,7 +171,7 @@ const movies = [
     language: "Hindi",
     description: "An alien stranded on Earth questions organized religion and superstition while searching for his stolen remote control.",
     cast: ["Aamir Khan", "Anushka Sharma", "Sushant Singh Rajput", "Boman Irani"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/PK_poster.jpg/220px-PK_poster.jpg"
+    poster: "assets/posters/pk.png"
   },
   {
     title: "Taare Zameen Par",
@@ -183,7 +182,7 @@ const movies = [
     language: "Hindi",
     description: "A dyslexic boy struggles at school until an art teacher recognizes his hidden talent and fights to restore his confidence.",
     cast: ["Darsheel Safary", "Aamir Khan", "Tisca Chopra", "Vipin Sharma"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/0/0b/Taare_Zameen_Par.jpg/220px-Taare_Zameen_Par.jpg"
+    poster: "assets/posters/taare-zameen-par.png"
   },
   {
     title: "Dhadak",
@@ -194,7 +193,7 @@ const movies = [
     language: "Hindi",
     description: "Two young people from different castes fall in love, defying their families in a story of passion, sacrifice, and heartbreak.",
     cast: ["Ishaan Khatter", "Janhvi Kapoor", "Ashutosh Rana"],
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/2/24/Dhadak_film_poster.jpg/220px-Dhadak_film_poster.jpg"
+    poster: "assets/posters/dhadak.png"
   }
 ];
 
