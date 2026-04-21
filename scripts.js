@@ -230,15 +230,68 @@ function buildMovieCard(movie) {
   );
 }
 
+var activeGenre = "All";
+var searchQuery = "";
+
+function getVisibleMovies() {
+  var visible = movies;
+  if (activeGenre !== "All") {
+    visible = visible.filter(function(movie) {
+      return movie.genre === activeGenre;
+    });
+  }
+  if (searchQuery.trim() !== "") {
+    var query = searchQuery.toLowerCase();
+    visible = visible.filter(function(movie) {
+      return movie.title.toLowerCase().includes(query);
+    });
+  }
+  return visible;
+}
+
 function showCatalog() {
   var container = document.getElementById("card-container");
   var resultsInfo = document.getElementById("results-count");
+  var visibleMovies = getVisibleMovies();
   var i;
   container.innerHTML = "";
-  resultsInfo.textContent = "Showing " + movies.length + " movies";
-  for (i = 0; i < movies.length; i++) {
-    container.innerHTML += buildMovieCard(movies[i]);
+  resultsInfo.textContent =
+    "Showing " + visibleMovies.length + " of " + movies.length + " movies";
+
+  if (visibleMovies.length === 0) {
+    container.innerHTML = '<p class="no-results">No movies matched your search.</p>';
+    return;
+  }
+
+  for (i = 0; i < visibleMovies.length; i++) {
+    container.innerHTML += buildMovieCard(visibleMovies[i]);
   }
 }
 
-document.addEventListener("DOMContentLoaded", showCatalog);
+function setupFilterButtons() {
+  var buttons = document.querySelectorAll(".filter-btn");
+  buttons.forEach(function(button) {
+    button.addEventListener("click", function() {
+      buttons.forEach(function(btn) {
+        btn.classList.remove("active");
+      });
+      button.classList.add("active");
+      activeGenre = button.getAttribute("data-genre");
+      showCatalog();
+    });
+  });
+}
+
+function setupSearchInput() {
+  var searchInput = document.getElementById("search-input");
+  searchInput.addEventListener("input", function() {
+    searchQuery = searchInput.value;
+    showCatalog();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  setupFilterButtons();
+  setupSearchInput();
+  showCatalog();
+});

@@ -21,14 +21,17 @@
         <h2>Filter</h2>
         <p class="sidebar-note">Browse by genre</p>
         <div class="filter-buttons">
-          <button type="button" class="filter-btn">All Films</button>
-          <button type="button" class="filter-btn">Romance</button>
-          <button type="button" class="filter-btn">Comedy</button>
-          <button type="button" class="filter-btn">Drama</button>
-          <button type="button" class="filter-btn">Action</button>
+          <button type="button" class="filter-btn active" data-genre="All">All Films</button>
+          <button type="button" class="filter-btn" data-genre="Romance">Romance</button>
+          <button type="button" class="filter-btn" data-genre="Comedy">Comedy</button>
+          <button type="button" class="filter-btn" data-genre="Drama">Drama</button>
+          <button type="button" class="filter-btn" data-genre="Action">Action</button>
         </div>
       </aside>
       <main class="content-area">
+        <div class="search-wrap">
+          <input id="search-input" type="text" placeholder="Search by movie title..." />
+        </div>
         <p id="results-count" class="results-info"></p>
         <div id="card-container" class="movie-grid"></div>
       </main>

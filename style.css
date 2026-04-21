@@ -75,12 +75,36 @@ body {
   background: #fffdf5;
   color: #5a3e2b;
   font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.filter-btn:hover {
+  border-color: #c9922a;
+}
+
+.filter-btn.active {
+  background: #7a1515;
+  color: #f0c96b;
+  border-color: #7a1515;
 }
 
 .content-area {
   flex: 1;
   min-width: 0;
   padding: 20px 18px 40px;
+}
+
+.search-wrap {
+  max-width: 560px;
+  margin-bottom: 12px;
+}
+
+#search-input {
+  width: 100%;
+  border: 1px solid #d8ba79;
+  border-radius: 22px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
 }
 
 .results-info {
@@ -182,6 +206,12 @@ body {
   font-size: 0.8rem;
   font-weight: 700;
   color: #c9922a;
+}
+
+.no-results {
+  padding: 18px;
+  color: #7a5a3e;
+  font-size: 0.9rem;
 }
 
 .footer {
