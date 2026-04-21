@@ -1,6 +1,6 @@
 # Bollywood Classics — catalog site
 
-Personal catalog project for Snap Engineering Academy (Stage 2). Vanilla `index.html`, `style.css`, and `scripts.js` only.
+Personal catalog project for Snap Engineering Academy (Stage 2).
 
 Open `index.html` in a browser to run it locally (no build step).
 
