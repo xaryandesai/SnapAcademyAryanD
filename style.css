@@ -1,4 +1,16 @@
-/* Grew out of the SEA template CSS — new layout + warm palette for the catalog */
+/* Bollywood catalog — organized by section; colors pulled into variables */
+
+:root {
+  --cream: #fdf6e3;
+  --cream-dark: #f0e4c4;
+  --cream-border: #e6d5a8;
+  --gold: #c9922a;
+  --gold-light: #f0c96b;
+  --deep-red: #7a1515;
+  --text: #2c1a0e;
+  --text-muted: #8b6a47;
+  --card-bg: #fffdf5;
+}
 
 html,
 body {
@@ -8,16 +20,28 @@ body {
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #fdf6e3;
-  color: #2c1a0e;
+  background: var(--cream);
+  color: var(--text);
   min-height: 100vh;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .main-header {
   background: linear-gradient(160deg, #6b0d0d 0%, #3d0808 100%);
   padding: 28px 16px 22px;
   text-align: center;
-  border-bottom: 3px solid #c9922a;
+  border-bottom: 3px solid var(--gold);
 }
 
 .title {
@@ -25,7 +49,7 @@ body {
   font-size: 2.2rem;
   font-family: Georgia, "Times New Roman", serif;
   font-weight: 700;
-  color: #f0c96b;
+  color: var(--gold-light);
 }
 
 .tagline {
@@ -44,21 +68,35 @@ body {
 .sidebar {
   width: 200px;
   flex-shrink: 0;
-  background: #f0e4c4;
-  border-right: 2px solid #e6d5a8;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  max-height: 100vh;
+  overflow-y: auto;
+  background: var(--cream-dark);
+  border-right: 2px solid var(--cream-border);
   padding: 20px 12px 28px;
 }
 
 .sidebar h2 {
-  color: #7a1515;
+  color: var(--deep-red);
   font-size: 1.1rem;
   margin: 0 0 4px;
 }
 
 .sidebar-note {
-  color: #8b6a47;
+  color: var(--text-muted);
   font-size: 0.82rem;
-  margin: 0 0 12px;
+  margin: 0 0 8px;
+}
+
+.filter-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 0 0 8px;
 }
 
 .filter-buttons {
@@ -79,13 +117,13 @@ body {
 }
 
 .filter-btn:hover {
-  border-color: #c9922a;
+  border-color: var(--gold);
 }
 
 .filter-btn.active {
-  background: #7a1515;
-  color: #f0c96b;
-  border-color: #7a1515;
+  background: var(--deep-red);
+  color: var(--gold-light);
+  border-color: var(--deep-red);
 }
 
 .content-area {
@@ -105,15 +143,23 @@ body {
   border-radius: 22px;
   padding: 10px 14px;
   font-size: 0.9rem;
+  background: #fffaf0;
+}
+
+#search-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(201, 146, 42, 0.25);
 }
 
 .results-info {
-  color: #8b6a47;
+  color: var(--text-muted);
   font-size: 0.88rem;
   margin-bottom: 16px;
+  font-style: italic;
 }
 
-/* keep starter-ish id but styled as a grid (phase 1: display only) */
+/* Main movie grid */
 #card-container.movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -121,12 +167,19 @@ body {
 }
 
 .movie-card {
-  background: #fffdf5;
+  background: var(--card-bg);
   border: 1px solid #eadfc5;
   border-radius: 10px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 2px 8px rgba(40, 20, 5, 0.08);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.movie-card:hover {
+  box-shadow: 0 6px 16px rgba(40, 20, 5, 0.12);
+  transform: translateY(-2px);
 }
 
 .poster-wrap {
@@ -209,16 +262,18 @@ body {
 }
 
 .no-results {
-  padding: 18px;
+  grid-column: 1 / -1;
+  padding: 28px 18px;
+  text-align: center;
   color: #7a5a3e;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .footer {
-  border-top: 1px solid #e6d5a8;
+  border-top: 1px solid var(--cream-border);
   padding: 14px;
   text-align: center;
-  background: #f0e4c4;
+  background: var(--cream-dark);
 }
 
 .footer-text {
@@ -234,8 +289,10 @@ body {
 
   .sidebar {
     width: 100%;
+    position: static;
+    max-height: none;
     border-right: none;
-    border-bottom: 2px solid #e6d5a8;
+    border-bottom: 2px solid var(--cream-border);
   }
 
   .filter-buttons {

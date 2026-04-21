@@ -191,85 +191,72 @@ const movies = [
 ];
 
 
+// --- state ---
+let activeGenre = "All";
+let searchQuery = "";
+
+// --- dom (filled on init so we are not querying over and over) ---
+let movieGrid = null;
+let resultsCount = null;
+let searchInput = null;
+
 function buildMovieCard(movie) {
-  var fallback =
+  const fallback =
     "https://placehold.co/200x300/7a1515/f0c96b?text=" +
     encodeURIComponent(movie.title);
-  return (
-    '<article class="movie-card">' +
-      '<div class="poster-wrap">' +
-        '<img class="movie-poster" src="' +
-        movie.poster +
-        '" alt="' +
-        movie.title +
-        ' poster" onerror="this.onerror=null;this.src=\'' +
-        fallback +
-        '\'">' +
-        '<span class="poster-year">' +
-        movie.year +
-        "</span>" +
-        '<span class="genre-badge poster-genre">' +
-        movie.genre +
-        "</span>" +
-      "</div>" +
-      '<div class="movie-info">' +
-        '<h2 class="movie-title">' +
-        movie.title +
-        "</h2>" +
-        '<p class="movie-director">Dir. ' +
-        movie.director +
-        "</p>" +
-        '<p class="movie-description">' +
-        movie.description +
-        "</p>" +
-        '<p class="movie-rating">' +
-        movie.rating +
-        "/10</p>" +
-      "</div>" +
-    "</article>"
-  );
+  return `
+    <article class="movie-card">
+      <div class="poster-wrap">
+        <img class="movie-poster" src="${movie.poster}" alt="${movie.title} poster"
+             onerror="this.onerror=null;this.src='${fallback}'">
+        <span class="poster-year">${movie.year}</span>
+        <span class="genre-badge poster-genre">${movie.genre}</span>
+      </div>
+      <div class="movie-info">
+        <h2 class="movie-title">${movie.title}</h2>
+        <p class="movie-director">Dir. ${movie.director}</p>
+        <p class="movie-description">${movie.description}</p>
+        <p class="movie-rating">${movie.rating}/10</p>
+      </div>
+    </article>
+  `;
 }
 
-var activeGenre = "All";
-var searchQuery = "";
-
-function getVisibleMovies() {
-  var visible = movies;
+function getFilteredMovies() {
+  let list = movies;
   if (activeGenre !== "All") {
-    visible = visible.filter(function(movie) {
-      return movie.genre === activeGenre;
+    list = list.filter(function(m) {
+      return m.genre === activeGenre;
     });
   }
   if (searchQuery.trim() !== "") {
-    var query = searchQuery.toLowerCase();
-    visible = visible.filter(function(movie) {
-      return movie.title.toLowerCase().includes(query);
+    const q = searchQuery.toLowerCase();
+    list = list.filter(function(m) {
+      return m.title.toLowerCase().includes(q);
     });
   }
-  return visible;
+  return list;
 }
 
-function showCatalog() {
-  var container = document.getElementById("card-container");
-  var resultsInfo = document.getElementById("results-count");
-  var visibleMovies = getVisibleMovies();
-  var i;
-  container.innerHTML = "";
-  resultsInfo.textContent =
-    "Showing " + visibleMovies.length + " of " + movies.length + " movies";
+function renderCatalog() {
+  const filtered = getFilteredMovies();
+  movieGrid.innerHTML = "";
+  resultsCount.textContent =
+    "Showing " + filtered.length + " of " + movies.length + " movies";
 
-  if (visibleMovies.length === 0) {
-    container.innerHTML = '<p class="no-results">No movies matched your search.</p>';
+  if (filtered.length === 0) {
+    movieGrid.innerHTML =
+      '<p class="no-results">No movies matched that filter or search.</p>';
     return;
   }
 
-  for (i = 0; i < visibleMovies.length; i++) {
-    container.innerHTML += buildMovieCard(visibleMovies[i]);
-  }
+  filtered.forEach(function(movie) {
+    movieGrid.innerHTML += buildMovieCard(movie);
+  });
 }
 
 function setupFilterButtons() {
-  var buttons = document.querySelectorAll(".filter-btn");
+  const buttons = document.querySelectorAll(".filter-btn");
   buttons.forEach(function(button) {
     button.addEventListener("click", function() {
       buttons.forEach(function(btn) {
@@ -277,21 +264,25 @@ function setupFilterButtons() {
       });
       button.classList.add("active");
       activeGenre = button.getAttribute("data-genre");
-      showCatalog();
+      renderCatalog();
     });
   });
 }
 
 function setupSearchInput() {
-  var searchInput = document.getElementById("search-input");
   searchInput.addEventListener("input", function() {
     searchQuery = searchInput.value;
-    showCatalog();
+    renderCatalog();
   });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+function init() {
+  movieGrid = document.getElementById("card-container");
+  resultsCount = document.getElementById("results-count");
+  searchInput = document.getElementById("search-input");
   setupFilterButtons();
   setupSearchInput();
-  showCatalog();
-});
+  renderCatalog();
+}
+
+document.addEventListener("DOMContentLoaded", init);

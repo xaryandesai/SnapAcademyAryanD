@@ -17,9 +17,10 @@
     </header>
 
     <div class="page-body">
-      <aside class="sidebar">
+      <aside class="sidebar" aria-label="Genre filters">
         <h2>Filter</h2>
         <p class="sidebar-note">Browse by genre</p>
+        <p class="filter-label">Genre</p>
         <div class="filter-buttons">
           <button type="button" class="filter-btn active" data-genre="All">All Films</button>
           <button type="button" class="filter-btn" data-genre="Romance">Romance</button>
@@ -30,7 +31,13 @@
       </aside>
       <main class="content-area">
         <div class="search-wrap">
-          <input id="search-input" type="text" placeholder="Search by movie title..." />
+          <label class="visually-hidden" for="search-input">Search by title</label>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Search by movie title..."
+            autocomplete="off"
+          />
         </div>
         <p id="results-count" class="results-info"></p>
         <div id="card-container" class="movie-grid"></div>
