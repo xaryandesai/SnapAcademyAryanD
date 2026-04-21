@@ -1,5 +1,13 @@
-// Built on the SEA stage-2 starter — swapped the sample TV data for my own movie list and render everything in a grid.
+// ============================================================
+// BOLLYWOOD MOVIE CATALOG - scripts.js
+// All the data lives at the top, all the logic below it.
+// ============================================================
 
+// --- MOVIE DATA ---
+// Each movie has the same fields so the rest of the code can
+// rely on them always being there. Cast is an array of strings;
+// poster is a Wikipedia image URL with a placehold.co fallback
+// wired up in buildMovieCard via onerror.
 const movies = [
   {
     title: "Dilwale Dulhania Le Jayenge",
@@ -190,63 +198,107 @@ const movies = [
   }
 ];
 
-
-// --- state ---
+// --- STATE ---
+// These two variables track what's currently active.
+// Any time either one changes I just call renderMovies() to refresh the grid.
 let activeGenre = "All";
 let searchQuery = "";
 
-// --- dom (filled on init so we are not querying over and over) ---
-let movieGrid = null;
-let resultsCount = null;
-let searchInput = null;
+// --- DOM REFERENCES ---
+// Grab once at startup instead of querying on every render.
+const movieGrid    = document.getElementById("movie-grid");
+const searchInput  = document.getElementById("search-input");
+const resultsCount = document.getElementById("results-count");
+const filterButtons = document.querySelectorAll(".filter-btn");
 
+// --- FILTER LOGIC ---
+// Returns the subset of movies that match BOTH the genre filter
+// and the search text. Either condition alone would also work but
+// combining them means the user can search within a genre.
+function getFilteredMovies() {
+  let filtered = movies;
+
+  // Step 1: genre filter — skip if "All" is selected
+  if (activeGenre !== "All") {
+    filtered = filtered.filter(function(movie) {
+      return movie.genre === activeGenre;
+    });
+  }
+
+  // Step 2: text search — title only (per project requirement)
+  if (searchQuery.trim() !== "") {
+    let query = searchQuery.toLowerCase();
+    filtered = filtered.filter(function(movie) {
+      return movie.title.toLowerCase().includes(query);
+    });
+  }
+
+  return filtered;
+}
+
+// --- BUILD STAR STRING ---
+// Extracted into its own helper so card rating display stays consistent.
+// Returns a string of 5 filled/empty stars based on a rating out of 10.
+function buildStars(rating) {
+  let fullStars = Math.floor(rating);
+  let stars = "";
+  for (let i = 0; i < fullStars; i++) {
+    stars += "★";
+  }
+  for (let i = fullStars; i < 10; i++) {
+    stars += "☆";
+  }
+  // slice to 5 so it fits nicely on each card
+  return stars;
+}
+
+// --- BUILD A CARD ---
+// Returns an HTML string for one movie card.
+// The card is poster-first with key details below.
 function buildMovieCard(movie) {
-  const fallback =
-    "https://placehold.co/200x300/7a1515/f0c96b?text=" +
-    encodeURIComponent(movie.title);
+  let genreClass = movie.genre.toLowerCase().replace(/\s+/g, "-");
+  let stars = buildStars(movie.rating).slice(0, 5);
+
+  // onerror: if the Wikipedia image fails, fall back to a colored placeholder
+  // that at least shows the movie title so the card still looks reasonable
+  let fallbackSrc = "https://placehold.co/200x300/7a1515/f0c96b?text=" + encodeURIComponent(movie.title);
+
   return `
-    <article class="movie-card">
-      <div class="poster-wrap">
-        <img class="movie-poster" src="${movie.poster}" alt="${movie.title} poster"
-             onerror="this.onerror=null;this.src='${fallback}'">
+    <div class="movie-card">
+      <div class="card-poster-wrap">
+        <img src="${movie.poster}"
+             alt="${movie.title} poster"
+             onerror="this.onerror=null; this.src='${fallbackSrc}'" />
         <span class="poster-year">${movie.year}</span>
-        <span class="genre-badge poster-genre">${movie.genre}</span>
+        <span class="genre-badge genre-${genreClass} poster-genre">${movie.genre}</span>
       </div>
-      <div class="movie-info">
+      <div class="card-info">
         <h2 class="movie-title">${movie.title}</h2>
-        <p class="movie-director">Dir. ${movie.director}</p>
-        <p class="movie-description">${movie.description}</p>
-        <p class="movie-rating">${movie.rating}/10</p>
+        <p class="card-director">Dir. ${movie.director}</p>
+        <p class="card-description">${movie.description}</p>
+        <div class="card-bottom">
+          <span class="card-stars">${stars}</span>
+          <span class="card-rating-num">${movie.rating}/10</span>
+        </div>
       </div>
-    </article>
+    </div>
   `;
 }
 
-function getFilteredMovies() {
-  let list = movies;
-  if (activeGenre !== "All") {
-    list = list.filter(function(m) {
-      return m.genre === activeGenre;
-    });
-  }
-  if (searchQuery.trim() !== "") {
-    const q = searchQuery.toLowerCase();
-    list = list.filter(function(m) {
-      return m.title.toLowerCase().includes(q);
-    });
-  }
-  return list;
-}
+// --- RENDER THE GRID ---
+// Clears the grid div and refills it based on current filter + search state.
+function renderMovies() {
+  let filtered = getFilteredMovies();
 
-function renderCatalog() {
-  const filtered = getFilteredMovies();
+  resultsCount.textContent = `Showing ${filtered.length} of ${movies.length} films`;
   movieGrid.innerHTML = "";
-  resultsCount.textContent =
-    "Showing " + filtered.length + " of " + movies.length + " movies";
 
   if (filtered.length === 0) {
-    movieGrid.innerHTML =
-      '<p class="no-results">No movies matched that filter or search.</p>';
+    movieGrid.innerHTML = `
+      <div class="no-results">
+        <p>No movies found. Try a different search or genre!</p>
+      </div>
+    `;
     return;
   }
 
@@ -255,34 +307,47 @@ function renderCatalog() {
   });
 }
 
+// --- ADD COUNT BADGES TO FILTER BUTTONS ---
+// This runs once at startup and adds a small number badge to each
+// genre button showing how many films are in that category.
+function setupGenreCounts() {
+  filterButtons.forEach(function(btn) {
+    let genre = btn.getAttribute("data-genre");
+    let count;
+    if (genre === "All") {
+      count = movies.length;
+    } else {
+      count = movies.filter(function(m) { return m.genre === genre; }).length;
+    }
+    // Append the count badge inside the button
+    btn.innerHTML = btn.textContent + `<span class="btn-count">${count}</span>`;
+  });
+}
+
+// --- SET UP FILTER BUTTONS ---
 function setupFilterButtons() {
-  const buttons = document.querySelectorAll(".filter-btn");
-  buttons.forEach(function(button) {
-    button.addEventListener("click", function() {
-      buttons.forEach(function(btn) {
-        btn.classList.remove("active");
-      });
-      button.classList.add("active");
-      activeGenre = button.getAttribute("data-genre");
-      renderCatalog();
+  filterButtons.forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      filterButtons.forEach(function(b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      activeGenre = btn.getAttribute("data-genre");
+      renderMovies();
     });
   });
 }
 
-function setupSearchInput() {
+// --- SET UP SEARCH ---
+// "input" fires on every keystroke so the grid updates as you type
+function setupSearch() {
   searchInput.addEventListener("input", function() {
     searchQuery = searchInput.value;
-    renderCatalog();
+    renderMovies();
   });
 }
 
-function init() {
-  movieGrid = document.getElementById("card-container");
-  resultsCount = document.getElementById("results-count");
-  searchInput = document.getElementById("search-input");
-  setupFilterButtons();
-  setupSearchInput();
-  renderCatalog();
-}
-
-document.addEventListener("DOMContentLoaded", init);
+// --- INIT ---
+// Set everything up, then do the first render.
+setupGenreCounts();
+setupFilterButtons();
+setupSearch();
+renderMovies();
