@@ -70,6 +70,40 @@
     <p>Films my family played on repeat &mdash; cataloged by Aryan Desai</p>
   </footer>
 
+  <!-- ========== MOVIE DETAIL MODAL ========== -->
+  <div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+
+      <div class="modal-poster-side">
+        <img id="modal-poster" src="" alt="" />
+      </div>
+
+      <div class="modal-info-side">
+        <h2 class="modal-title" id="modal-title"></h2>
+
+        <div class="modal-meta">
+          <span class="modal-year" id="modal-year"></span>
+          <span class="genre-badge" id="modal-genre"></span>
+          <span class="modal-lang" id="modal-lang"></span>
+        </div>
+
+        <div class="modal-stars-row">
+          <span class="card-stars" id="modal-stars"></span>
+          <span class="card-rating-num" id="modal-rating"></span>
+        </div>
+
+        <p class="modal-section-label">Director</p>
+        <p class="modal-director-name" id="modal-director"></p>
+
+        <p class="modal-section-label">Cast</p>
+        <div class="modal-cast-tags" id="modal-cast"></div>
+
+        <p class="modal-description" id="modal-description"></p>
+      </div>
+    </div>
+  </div>
+
   <!-- Script at end of body so DOM elements above exist when it runs -->
   <script src="scripts.js"></script>
 

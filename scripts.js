@@ -287,18 +287,16 @@ function buildStars(rating) {
 
 // --- BUILD A CARD ---
 // Returns an HTML string for one movie card.
-// The card is poster-first with key details below.
-function buildMovieCard(movie) {
+// movieIndex is the position in the master `movies` array so the modal can look it up.
+function buildMovieCard(movie, movieIndex) {
   let genreClass = movie.genre.toLowerCase().replace(/\s+/g, "-");
   let stars = buildStars(movie.rating).slice(0, 5);
 
-  // onerror: if the Wikipedia image fails, fall back to a colored placeholder
-  // that at least shows the movie title so the card still looks reasonable
   let fallbackSrc = "https://placehold.co/200x300/7a1515/f0c96b?text=" + encodeURIComponent(movie.title);
   let posterSrc = resolvePosterUrl(movie.poster);
 
   return `
-    <div class="movie-card">
+    <div class="movie-card" data-movie-index="${movieIndex}">
       <div class="card-poster-wrap">
         <img src="${posterSrc}"
              alt="${movie.title} poster"
@@ -314,6 +312,7 @@ function buildMovieCard(movie) {
           <span class="card-stars">${stars}</span>
           <span class="card-rating-num">${movie.rating}/10</span>
         </div>
+        <p class="card-hint">Tap for details &rarr;</p>
       </div>
     </div>
   `;
@@ -337,7 +336,7 @@ function renderMovies() {
   }
 
   filtered.forEach(function(movie) {
-    movieGrid.innerHTML += buildMovieCard(movie);
+    movieGrid.innerHTML += buildMovieCard(movie, movies.indexOf(movie));
   });
 }
 
@@ -379,9 +378,70 @@ function setupSearch() {
   });
 }
 
+// --- MODAL ---
+// Opens a centered detail popup for the clicked movie card.
+function setupModal() {
+  var overlay   = document.getElementById("modal-overlay");
+  var closeBtn  = document.getElementById("modal-close");
+
+  function openModal(movie) {
+    var fallback = "https://placehold.co/280x420/7a1515/f0c96b?text=" + encodeURIComponent(movie.title);
+    var posterEl = document.getElementById("modal-poster");
+    posterEl.onerror = function() { this.onerror = null; this.src = fallback; };
+    posterEl.src = resolvePosterUrl(movie.poster);
+    posterEl.alt = movie.title + " poster";
+
+    document.getElementById("modal-title").textContent = movie.title;
+    document.getElementById("modal-year").textContent  = movie.year;
+    document.getElementById("modal-lang").textContent  = movie.language;
+
+    var genreEl = document.getElementById("modal-genre");
+    genreEl.textContent = movie.genre;
+    genreEl.className   = "genre-badge genre-" + movie.genre.toLowerCase().replace(/\s+/g, "-");
+
+    document.getElementById("modal-stars").textContent  = buildStars(movie.rating).slice(0, 5);
+    document.getElementById("modal-rating").textContent = movie.rating + "/10";
+    document.getElementById("modal-director").textContent = movie.director;
+
+    document.getElementById("modal-cast").innerHTML = movie.cast
+      .map(function(name) { return '<span class="cast-tag">' + name + '</span>'; })
+      .join("");
+
+    document.getElementById("modal-description").textContent = movie.description;
+
+    overlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    overlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  // Open when a card is clicked (event delegation — works after every re-render)
+  movieGrid.addEventListener("click", function(e) {
+    var card = e.target.closest(".movie-card");
+    if (!card) return;
+    var idx = parseInt(card.getAttribute("data-movie-index"), 10);
+    openModal(movies[idx]);
+  });
+
+  // Close via X button, backdrop click, or Escape key
+  closeBtn.addEventListener("click", closeModal);
+
+  overlay.addEventListener("click", function(e) {
+    if (e.target === overlay) closeModal();
+  });
+
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") closeModal();
+  });
+}
+
 // --- INIT ---
 // Set everything up, then do the first render.
 setupGenreCounts();
 setupFilterButtons();
 setupSearch();
+setupModal();
 renderMovies();

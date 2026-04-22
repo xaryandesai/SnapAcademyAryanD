@@ -301,6 +301,7 @@ header::before {
   display: flex;
   flex-direction: column;
   transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  cursor: pointer;
 }
 
 .movie-card:hover {
@@ -437,6 +438,22 @@ header::before {
 .genre-drama   { background: #e4ddf8; color: #3e1870; }
 .genre-action  { background: #ffe5cc; color: #6e2f00; }
 
+/* "Tap for details" hint at card bottom */
+.card-hint {
+  font-size: 0.68rem;
+  color: var(--gold);
+  text-align: center;
+  margin-top: 7px;
+  opacity: 0;
+  font-style: italic;
+  letter-spacing: 0.3px;
+  transition: opacity 0.2s ease;
+}
+
+.movie-card:hover .card-hint {
+  opacity: 1;
+}
+
 /* ---- NO RESULTS ---- */
 .no-results {
   grid-column: 1 / -1;
@@ -446,6 +463,177 @@ header::before {
   font-size: 1rem;
 }
 
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 8, 0, 0.78);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+}
+
+.modal-overlay.open {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.25s ease, visibility 0s linear 0s;
+}
+
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+.modal-box {
+  background: var(--cream);
+  border-radius: 16px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  display: flex;
+  position: relative;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(201, 146, 42, 0.25);
+}
+
+.modal-overlay.open .modal-box {
+  animation: modalSlideIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Close button — top-right corner */
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text-mid);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.modal-close:hover {
+  background: var(--deep-red);
+  color: var(--gold-light);
+}
+
+/* Left column — poster */
+.modal-poster-side {
+  flex-shrink: 0;
+  width: 230px;
+  background: linear-gradient(160deg, #3d1010 0%, #1a0505 100%);
+  border-radius: 16px 0 0 16px;
+  overflow: hidden;
+}
+
+.modal-poster-side img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Right column — info */
+.modal-info-side {
+  flex: 1;
+  padding: 30px 32px 30px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+}
+
+.modal-title {
+  font-family: Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--deep-red);
+  line-height: 1.25;
+  padding-right: 36px; /* don't overlap close button */
+}
+
+.modal-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modal-year {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.modal-lang {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.modal-stars-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Uppercase label above director / cast */
+.modal-section-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+  color: var(--text-light);
+  margin-bottom: -5px;
+}
+
+.modal-director-name {
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  font-style: italic;
+}
+
+/* Cast name pill tags */
+.modal-cast-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cast-tag {
+  background: var(--cream-dark);
+  border: 1px solid var(--cream-deeper);
+  color: var(--text-mid);
+  font-size: 0.76rem;
+  padding: 3px 11px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.modal-description {
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+  margin-top: 2px;
+}
 
 /* ============================================================
    FOOTER
@@ -499,6 +687,27 @@ footer {
   #movie-grid {
     grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
     gap: 14px;
+  }
+
+  /* Modal stacks vertically on mobile */
+  .modal-box {
+    flex-direction: column;
+    max-height: 92vh;
+  }
+
+  .modal-poster-side {
+    width: 100%;
+    height: 260px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modal-info-side {
+    padding: 20px 18px 24px;
+    gap: 9px;
+  }
+
+  .modal-title {
+    font-size: 1.2rem;
   }
 
 }
