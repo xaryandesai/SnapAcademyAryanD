@@ -3,6 +3,28 @@
 // All the data lives at the top, all the logic below it.
 // ============================================================
 
+// Folder this script lives in (used so poster paths work on GitHub Pages project sites).
+var __scriptDir = (function () {
+  try {
+    var el = document.currentScript;
+    if (el && el.src) {
+      return new URL(".", el.href).href;
+    }
+  } catch (e) {}
+  return "";
+})();
+
+function resolvePosterUrl(relativeOrAbsolute) {
+  if (/^https?:\/\//i.test(relativeOrAbsolute)) {
+    return relativeOrAbsolute;
+  }
+  try {
+    return new URL(relativeOrAbsolute, __scriptDir).href;
+  } catch (e) {
+    return relativeOrAbsolute;
+  }
+}
+
 // --- MOVIE DATA ---
 // Each movie has the same fields so the rest of the code can
 // rely on them always being there. Cast is an array of strings;
@@ -194,6 +216,17 @@ const movies = [
     description: "Two young people from different castes fall in love, defying their families in a story of passion, sacrifice, and heartbreak.",
     cast: ["Ishaan Khatter", "Janhvi Kapoor", "Ashutosh Rana"],
     poster: "assets/posters/dhadak.png"
+  },
+  {
+    title: "Dhurandhar",
+    year: 2025,
+    genre: "Action",
+    director: "Aditya Dhar",
+    rating: 7.9,
+    language: "Hindi",
+    description: "An undercover intelligence operative is pulled into a dangerous cross-border mission, where criminal networks, political pressure, and personal loyalty collide.",
+    cast: ["Ranveer Singh", "R. Madhavan", "Akshaye Khanna", "Arjun Rampal", "Sanjay Dutt"],
+    poster: "assets/posters/dhurandhar.png"
   }
 ];
 
@@ -226,9 +259,10 @@ function getFilteredMovies() {
 
   // Step 2: text search — title only (per project requirement)
   if (searchQuery.trim() !== "") {
-    let query = searchQuery.toLowerCase();
+    let query = searchQuery.toLowerCase().replace(/\s+/g, " ").trim();
     filtered = filtered.filter(function(movie) {
-      return movie.title.toLowerCase().includes(query);
+      let normalizedTitle = movie.title.toLowerCase().replace(/\s+/g, " ").trim();
+      return normalizedTitle.includes(query);
     });
   }
 
@@ -261,11 +295,12 @@ function buildMovieCard(movie) {
   // onerror: if the Wikipedia image fails, fall back to a colored placeholder
   // that at least shows the movie title so the card still looks reasonable
   let fallbackSrc = "https://placehold.co/200x300/7a1515/f0c96b?text=" + encodeURIComponent(movie.title);
+  let posterSrc = resolvePosterUrl(movie.poster);
 
   return `
     <div class="movie-card">
       <div class="card-poster-wrap">
-        <img src="${movie.poster}"
+        <img src="${posterSrc}"
              alt="${movie.title} poster"
              onerror="this.onerror=null; this.src='${fallbackSrc}'" />
         <span class="poster-year">${movie.year}</span>
