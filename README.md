@@ -1,7 +1,18 @@
-# Bollywood Classics — catalog site
+# Bollywood Classics — Catalog Site
 
-Personal catalog project for Snap Engineering Academy (Stage 2).
+A personal catalog of 18 Bollywood films I grew up watching,
+built for the Snap Engineering Academy Stage 2 assessment.
 
-Open `index.html` in a browser to run it locally (no build step).
+Features:
+- Search by title, director, or actor
+- Filter by genre with live count
+- Clickable cards with a movie poster modal
 
-Based on the official [stage-2-SEA-Project](https://github.com/Snap-Engineering-Academy-2026/stage-2-SEA-Project) starter.
+Open https://xaryandesai.github.io/SnapV2/ to view the website.
+Data sourced from personal memory and verified on IMDb.
+
+![Homepage](homepage.png)
+
+![Card](card.png)
+
+![Search](search.png)
